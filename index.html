@@ -1,0 +1,194 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uy narxi bashorati</title>
+</head>
+<body>
+    <h1>Uy narxini bashorat qilish</h1>
+    <form action="/predict" method="POST">
+        <label for="bedrooms">Yotoqxonalar soni:</label>
+        <input type="number" id="bedrooms" name="bedrooms" required><br><br>
+        
+        <label for="bathrooms">Vannaxonalar soni:</label>
+        <input type="number" id="bathrooms" name="bathrooms" required><br><br>
+        
+        <label for="sqft_living">Yashash maydoni (sqft):</label>
+        <input type="number" id="sqft_living" name="sqft_living" required><br><br>
+        
+        <label for="sqft_lot">Tomorqa maydoni (sqft):</label>
+        <input type="number" id="sqft_lot" name="sqft_lot" required><br><br>
+        
+        <label for="floors">Qavatlar soni:</label>
+        <input type="number" id="floors" name="floors" required><br><br>
+        
+        <label for="waterfront">Suv yaqinligi (0 yoki 1):</label>
+        <input type="number" id="waterfront" name="waterfront" required><br><br>
+        
+        <label for="view">Ko'rinish bahosi (0-4):</label>
+        <input type="number" id="view" name="view" required><br><br>
+        
+        <label for="condition">Uy holati (1-5):</label>
+        <input type="number" id="condition" name="condition" required><br><br>
+        
+        <label for="sqft_above">Yer usti maydoni (sqft):</label>
+        <input type="number" id="sqft_above" name="sqft_above" required><br><br>
+        
+        <label for="sqft_basement">Yerto'la maydoni (sqft):</label>
+        <input type="number" id="sqft_basement" name="sqft_basement" required><br><br>
+        
+        <label for="yr_built">Qurilgan yil:</label>
+        <input type="number" id="yr_built" name="yr_built" required><br><br>
+        
+        <label for="yr_renovated">Ta'mirlangan yil:</label>
+        <input type="number" id="yr_renovated" name="yr_renovated" required><br><br>
+
+        <button type="submit">Bashorat qilish</button>
+    </form>
+
+    {% if predicted_price %}
+    <h2>Bashorat qilingan uy narxi: {{ predicted_price }}</h2>
+    {% endif %}
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uy narxi bashorati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://zamin.uz/uploads/posts/2019-11/1573561599_12688103_1043768362312929_9056461361377205250_n.jpg');
+            background-size: cover;
+            /* Rasmingizni ekran o'lchamiga moslashtirish uchun */
+            background-position: center;
+            /* Rasmingiz markazda joylashadi */
+            background-repeat: no-repeat;
+            /* Rasm takrorlanmasligi uchun */
+        }
+
+        .container {
+            width: 40%;
+            margin: 50px auto;
+            background-color: #71eff8;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d3191c;
+        }
+
+        form {
+            display: flex;
+            /* flex-direction: column; */
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #b90f9f;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 80px;
+            height: 50px;
+            padding: 10px;
+            margin-top: 70%;
+            /* margin-right: 50%; */
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+
+        }
+
+        button:hover {
+            background-color: #1dabd7;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Ko'p qavatli uylarning narxini bashorat qilish</h1>
+        <form style="display: flex; " action="/predict" method="POST">
+            <div>
+                <label for="bedrooms">Xonalar soni:</label>
+                <input type="number" id="bedrooms" name="bedrooms" required>
+
+                <label for="bathrooms"> Yotoqxonalar soni:</label>
+                <input type="number" id="bathrooms" name="bathrooms" required>
+
+                <label for="sqft_living">Yashash maydoni (sotix):</label>
+                <input type="number" id="sqft_living" name="sqft_living" required>
+
+                <label for="sqft_lot">Tomorqa maydoni (sotix):</label>
+                <input type="number" id="sqft_lot" name="sqft_lot" required>
+
+                <label for="floors">Qavatlar soni:</label>
+                <input type="number" id="floors" name="floors" required>
+
+                <label for="waterfront">Suv yaqinligi (0 yoki 1):</label>
+                <input type="number" id="waterfront" name="waterfront" required>
+
+            </div>
+            <div style="margin-left: 50px;">
+                <label for="view">Ko'rinish bahosi (0-10):</label>
+                <input type="number" id="view" name="view" required>
+
+                <label for="condition">Uy holati (1-5):</label>
+                <input type="number" id="condition" name="condition" required>
+
+                <label for="sqft_above">Yer usti maydoni (sotix):</label>
+                <input type="number" id="sqft_above" name="sqft_above" required>
+
+                <label for="sqft_basement">Yerto'la maydoni (sotix):</label>
+                <input type="number" id="sqft_basement" name="sqft_basement" required>
+
+                <label for="yr_built">Qurilgan yil:</label>
+                <input type="number" id="yr_built" name="yr_built" required>
+
+                <label for="yr_renovated">Ta'mirlangan yil:</label>
+                <input type="number" id="yr_renovated" name="yr_renovated" required>
+
+            </div>
+
+            <button type="submit">Bashorat qilish</button>
+        </form>
+
+        {% if predicted_price %}
+        <div class="result">
+            <h2>Bashorat qilingan uy narxi: ${{ predicted_price }}</h2>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
